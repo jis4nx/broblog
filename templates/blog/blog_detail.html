@@ -1,0 +1,139 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block body %}
+<style>
+  .img-cont {
+    max-width: 1000px;
+    max-height: 300px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    margin: auto;
+  }
+
+  .cborder {
+    border-style: dashed;
+    border-width: 2px;
+    border-color: lightgray;
+  }
+  .blog-cont {
+    line-height: 2em;
+    display: inline-block;
+  }
+  .author {
+    color: #cc3644;
+    font-size: 1rem;
+  }
+  .dimage {
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+    object-fit: cover;
+  }
+  .wrapper-meta {
+    display: flex;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    gap: 1em;
+  }
+
+  .comment-wrap {
+    padding-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+  .like__icon{
+    position:absolute;
+    right:0;
+    font-size:2.5rem;
+  }
+</style>
+
+<div class="container w-75 mt-3 shadow-sm p-3 mb-5 bg-body rounded cborder">
+  <div class="position-relative">
+    <a href=""><i class="fa-regular fa-heart text-secondary like__icon"></i>
+</a>
+  </div>
+  <div class="row">
+    <article class="blog-post">
+      <!-- <h2 class="btitle font-weight-bold">{{blog.title}}</h2> -->
+      <div class="author wrapper-meta">
+        <img
+          class="dimage"
+          src="{{blog.author.userprofile.profile_img.url}}"
+          alt=""
+        />
+        <p class="author" style="">{{blog.author}}</p>
+        {% if request.user.is_authenticated and request.user == blog.author %}
+          <a class="text-decoration-none" href="{% url 'blog:update-blog' slug=blog.slug %}"><i class="fa-regular fa-pen-to-square"></i> Edit</a>
+        {% else %}
+        {% endif %}
+      </div>
+      <p class="text-muted" style="font-size: 0.85rem">
+        Posted on {{blog.date_update}}
+      </p>
+      <hr />
+      {% if blog.content_image %}
+      <div class="col-sm-12 justify-content-center align-items center">
+        <div class="w-50 m-auto">
+          <img
+            class="rounded img-cont img-fluid"
+            src="{{blog.content_image.url}}"
+            alt="Nothing"
+          />
+        </div>
+      </div>
+      {% else %}
+      <p></p>
+      {% endif %}
+      <div class="col-12 p-3 blog-cont">
+        <p class="">{{blog.content | linebreaks}}</p>
+      </div>
+    </article>
+  </div>
+</div>
+<div class="container w-75 border">
+  <div class="row">
+    <div class="col-12"></div>
+    {% if request.user.is_authenticated %}
+    <form method="POST">
+      {% csrf_token %}
+      <div class="comment-wrap">
+        <img
+          class="dimage"
+          src="{{request.user.userprofile.profile_img.url}}"
+          alt=""
+        />
+        <textarea
+          name="comment"
+          class="mb-3"
+          rows="3"
+          cols="70"
+          style="display: block"
+          placeholder="Post a commment..."
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        class="small btn btn-md btn-outline-primary mb-4"
+        style="margin-left: 3.6rem"
+      >
+        Add Comment
+      </button>
+    </form>
+    {% else %}
+    <a href="{% url 'accounts:login' %}">Please Login to post a comment.</a>
+    {% endif %} {% if comments %}
+    <div class="p-3">
+      <p class="text-muted">{{object.total_comments}}</p>
+      {% else %} {% endif %}
+      <hr />
+      {% for comment in comments %}
+      <div class="d-flex gap-2 cbox py-3">
+        <img class="dimage" src="{{comment.user.userprofile.profile_img.url}}" alt="">
+        <a href="" class="text-decoration-none">{{comment.user}}</a>
+        <p class="small">: {{comment.comment}}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

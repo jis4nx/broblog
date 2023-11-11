@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container mt-3 shadow-lg p-3 mb-5 bg-body rounded" style="width:45em;">
+  <h3 class="h3 text-secondary text-center mb-3">Write a new blog</h3>
+  <form id="post-form" method="POST" enctype="multipart/form-data">
+    {% csrf_token%}
+    {{form | crispy}}
+    <button class="btn btn-md btn-outline-primary" type="submit">Post</button>
+  </form>
+</div>
+<script>
+  $('#post-form').on('submit', function(e){
+    e.preventDefault();
+    $.ajax({
+      type:'POST',
+      url:'/blog/new/',
+      data:{
+        title:$('#id_title').val(),
+        content:$('#id_content').val(),
+        content_image:$('#id_content_image').val(),
+        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(data){
+        console.log(data)
+      }
+    })
+  })
+</script>
+{% endblock %}

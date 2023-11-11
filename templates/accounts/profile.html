@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<style>
+  .dimage{
+    height:200px;
+    width:200px;
+    border-radius: 50%;
+	object-fit: cover;
+  }
+</style>
+
+<div class="container w-50 mt-3">
+  <div class="shadow p-4 bg-white rounded">
+    <div class="card mx-auto w-75" style="">
+      <img class="dimage mx-auto p-3"  src="{{request.user.userprofile.profile_img.url}}" alt="">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{request.user}}</h5>
+        <hr>
+        <div class="card-text">
+          <table class="table">
+            <tr>
+              <th scope="row">Email</th>
+              <td>{{request.user.userprofile.email}}</td>
+            </tr>
+              <tr>
+                <th>Phone</th>
+                <td>{{request.user.userprofile.phone}}</td>
+              </tr>
+          </table>
+        </div>
+        <a href="{% url 'accounts:edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

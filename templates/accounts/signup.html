@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title%} Register {% endblock %} 
+{% block body%}
+<style>
+  .pcont{
+    margin-top: 4em;
+    margin-left: 15em
+  }
+
+  .alertpos{
+    display: inline-block;
+    width: 40%;
+    margin-top:1em;
+    margin-right: 1em;
+    float: right;
+
+  }
+</style>
+{% if registered %}
+  <div class="alert alert-success alert-dismissible fade show alertpos" role="alert">
+    <strong>Registration Success</strong>
+    <a class="text-decoration-none" href="{% url 'accounts:login' %}">Login Here</a> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+{% elif registered is False %}
+<div class="alert alert-danger alert-dismissible fade show alertpos" role="alert">
+    <strong>Registration Failed</strong>
+    <p>Type your username and password carefully.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+</div>
+{% endif %}
+<div class="container pcont w-50">
+  <h2 class="pb-4 ptext">Register Here!</h2>
+  <div class="shadow p-4 mb-5 bg-white rounded">
+    <form method="POST" class="">
+      {% csrf_token %}
+      {{form | crispy}}
+    <button class="btn btn-md btn-success" type="submit">Sign Up</button>
+    </form>
+  </div>
+</div>
+
+{% endblock%}
